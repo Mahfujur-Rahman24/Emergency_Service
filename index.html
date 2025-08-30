@@ -229,5 +229,63 @@
           </div>
         </aside>
 
+
+<!-- Javascript part -->
+    <script>
+        let loveCount = 0,
+        coinCount = 100,
+        copyCount = 0;
+
+  const loveSpan   = document.getElementById("love-count");
+  const coinSpan   = document.getElementById("coinCount");
+  const copySpan   = document.getElementById("copy-count");
+  const historyList = document.getElementById("history-list");
+  const clearBtn    = document.getElementById("clear-history");
+
+  document.addEventListener("click", (e) => {
+    if (e.target.closest(".heart")) {
+      loveSpan.textContent = ++loveCount;
+    }
+
+    //Copy
+    if (e.target.closest(".copy-btn")) {
+      const card   = e.target.closest(".card");
+      const number = card.querySelector(".number").textContent;
+      copySpan.textContent = ++copyCount;
+      navigator.clipboard.writeText(number).then(() =>
+        alert(`Copied: ${number}`)
+      );
+    }
+
+    // Call
+    if (e.target.closest(".call-btn")) {
+      if (coinCount < 20) return alert("Not enough coins!");
+      const card    = e.target.closest(".card");
+      const service = card.querySelector("h2").textContent;
+      const number  = card.querySelector(".number").textContent;
+
+      coinCount -= 20;
+      coinSpan.textContent = coinCount;
+      alert(`☎ Calling ${service} ${number}...`);
+
+      // Add in call history
+      const li = document.createElement("li");
+      li.className =
+        "bg-[#FAFAFA] p-3 rounded-xl flex justify-between items-center shadow-sm";
+      li.innerHTML = `
+        <div>
+          <h4 class="font-semibold text-[#111111]">${service}</h4>
+          <p class="text-sm text-[#5C5C5C]">${number}</p>
+        </div>
+        <span class="text-sm text-[#111111]">${new Date().toLocaleTimeString()}</span>
+      `;
+      historyList.appendChild(li);
+    }
+  });
+
+  // 🗑 Clear
+  clearBtn.addEventListener("click", () => (historyList.innerHTML = ""));
+</script>
+
 </body>
 </html>
